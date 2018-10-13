@@ -2,15 +2,29 @@ import datetime
 import smtplib
 import urllib2
 import textwrap
+from collections import OrderedDict
 
 from bs4 import BeautifulSoup
 
 from credentials import gmail_password, gmail_user
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 SOLD_OUT = 'SOLD OUT'
 
 
+HTML = textwrap.dedent("""\
+            <html>
+              <head></head>
+              <body>
+                <p>Hi!<br>
+                   How are you?<br>
+                   Here is the <a href="https://www.python.org">link</a> you wanted.
+                </p>
+              </body>
+            </html>
+""")
 
 
 def get_game_statuses():
@@ -48,53 +62,42 @@ class Emailer(object):
             self.server.close()
 
     def send_email(self, body):
-        subject = 'Hockey Game Available!'
-        body = textwrap.dedent("""
-            It's available
-        """)
+        message = MIMEMultipart('alternative')
+        message['Subject'] = 'Hockey Game Available!'
+        message['From'] = self.user_email_address
+        message['To'] = self.user_email_address
 
-        email_text = textwrap.dedent("""\
-        From:{}
-        To: {}
-        Subject: {}
-        \r\n
-        {}
-        """.format(self.user_email_address, ", ".join([self.user_email_address]), subject, body))
-
-        self.server.sendmail(self.user_email_address, self.user_email_address, email_text)
+        part2 = MIMEText(body, 'html')
+        message.attach(part2)
+        self.server.sendmail(self.user_email_address, self.user_email_address, message.as_string())
 
     def send_game_status_emails(self, game_statuses):
         if any(game_statuses.items()):
-            # body = textwrap.dedent("""
-            # <table>
-            #     <thead>
-            #         <tr>
-            #             <th> Date </th>
-            #             <th> Availability </th>
-            #         </tr>
-            #     </thead>
-            #     <tbody>
-            # """)
-            # for day, is_game_sold_out in game_statuses.iteritems():
-            #     body += '<tr> {}: {}  </tr>'.format(day, 'sold out' if is_game_sold_out else 'available')
-            # body += textwrap.dedent("""
-            #     </tbody>
-            # </table>
-            # """)
-
-            body = ''
+            body = textwrap.dedent("""
+            <table>
+                <thead>
+                    <tr>
+                        <th> Date </th>
+                        <th> Availability </th>
+                    </tr>
+                </thead>
+                <tbody>
+            """)
             for day, is_game_sold_out in game_statuses.iteritems():
-                body += '{}: {} \r\n'.format(day, 'sold out' if is_game_sold_out else 'available')
-        print body
+                body += '<tr> <td>{}</td> <td>{}</td> </tr>'.format(day, 'sold out' if is_game_sold_out else 'available')
+            body += textwrap.dedent("""
+                </tbody>
+            </table>
+            """)
         self.send_email(body)
 
 
 def build_urls():
     base_url = 'https://secure.stinkysocks.net/NCH/NCH-'
     hours = [21, 22]
-    weeks_ahead = 1
+    weeks_ahead = 3
 
-    urls = {}
+    urls = OrderedDict()
     today = datetime.date.today()
     for week_ahead in range(weeks_ahead):
         tuesday = today + datetime.timedelta(((1-today.weekday()) % 7) + week_ahead * 7)
