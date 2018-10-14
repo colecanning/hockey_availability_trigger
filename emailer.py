@@ -58,3 +58,6 @@ class Emailer(object):
         </table>
         """)
         self.send_email(body)
+
+    def send_error_email(self):
+        self.send_email('There was an issue getting game availability!')

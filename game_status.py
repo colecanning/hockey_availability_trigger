@@ -11,7 +11,7 @@ class GameStatus(object):
 
     def did_game_become_available(self):
         if self.was_game_sold_out or self.was_game_sold_out is None:
-            if not self.is_game_sold_out:
+            if self.is_game_sold_out is False:
                 return True
         return False
 
