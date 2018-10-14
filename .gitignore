@@ -1,2 +1,3 @@
 venv*
 credentials*
+__pycache__*

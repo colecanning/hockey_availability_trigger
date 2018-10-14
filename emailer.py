@@ -36,26 +36,25 @@ class Emailer(object):
             return 'available'
 
     def send_game_status_emails(self, game_statuses):
-        if any([g.is_game_sold_out for g in game_statuses]):
-            body = textwrap.dedent("""
-            <table>
-                <thead>
-                    <tr>
-                        <th> Date </th>
-                        <th> Availability </th>
-                    </tr>
-                </thead>
-                <tbody>
-            """)
-            for game_status in game_statuses:
-                body += textwrap.dedent("""
-                    <tr>
-                        <td> {} </td> <td> {} </td> <td> <a href="{}"> link </a> </td>
-                    </tr>
-                """).format(game_status.datetime, self.get_game_availability_copy(game_status.is_game_sold_out),
-                            game_status.url)
+        body = textwrap.dedent("""
+        <table>
+            <thead>
+                <tr>
+                    <th> Date </th>
+                    <th> Availability </th>
+                </tr>
+            </thead>
+            <tbody>
+        """)
+        for game_status in game_statuses:
             body += textwrap.dedent("""
-                </tbody>
-            </table>
-            """)
+                <tr>
+                    <td> {} </td> <td> {} </td> <td> <a href="{}"> link </a> </td>
+                </tr>
+            """).format(game_status.datetime, self.get_game_availability_copy(game_status.is_game_sold_out),
+                        game_status.url)
+        body += textwrap.dedent("""
+            </tbody>
+        </table>
+        """)
         self.send_email(body)
