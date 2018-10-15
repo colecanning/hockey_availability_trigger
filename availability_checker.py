@@ -66,7 +66,13 @@ class AvailabilityChecker(object):
         sql_dao = SQLDao()
         try :
             sql_dao.build_hockey_games_table()
-            emailer = Emailer(gmail_user, gmail_password)
+            try:
+                emailer = Emailer(gmail_user, gmail_password)
+            except Exception as e:
+                print('Exception while starting emailer: {}'.format(e))
+                print('proceeding with console messages instead...')
+                emailer = lambda msg: println(msg)
+
             game_statuses = self.get_game_statuses(sql_dao)
 
             did_game_change = any([g.did_game_become_available() for g in game_statuses])
@@ -84,6 +90,6 @@ class AvailabilityChecker(object):
             print('Exception while starting emailer: {}'.format(e))
 
         finally:
-            if emailer:
+            if emailer and not callable(emailer):
                 print('Closing SMTP Connection')
                 emailer.close()
