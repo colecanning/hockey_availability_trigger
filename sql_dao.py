@@ -1,10 +1,10 @@
 import sqlite3
 from sqlite3 import Error
 
+from credentials import sqlite_db_file
+
 
 class SQLDao(object):
-    SQL_FILE = "/home/ccanning/pythonsqlite.db"
-
     SQL_INSERT_HOCKEY_GAMES_TABLE = """
         CREATE TABLE IF NOT EXISTS hockey_game_tested_new (
             id integer PRIMARY KEY,
@@ -19,7 +19,7 @@ class SQLDao(object):
 
     def create_connection(self):
         """ create a database connection to a SQLite database """
-        return sqlite3.connect(self.SQL_FILE)
+        return sqlite3.connect(sqlite_db_file)
 
     def build_hockey_games_table(self):
         cursor = self.connection.cursor()
