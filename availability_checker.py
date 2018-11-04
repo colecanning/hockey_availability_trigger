@@ -6,8 +6,9 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
 from credentials import gmail_password, gmail_user
-from emailer import Emailer
+from email_notifier import EmailNotifier
 from game_status import GameStatus
+from notifier_factory import NotifierFactory
 from sql_dao import SQLDao
 
 
@@ -62,28 +63,27 @@ class AvailabilityChecker(object):
         return game_statuses
 
     def check_game_availability(self):
-        emailer = None
+        notifier = None
         sql_dao = SQLDao()
         try :
             sql_dao.build_hockey_games_table()
-            emailer = Emailer(gmail_user, gmail_password)
+            notifier = NotifierFactory.get_notifier(gmail_user, gmail_password)
             game_statuses = self.get_game_statuses(sql_dao)
 
             did_game_change = any([g.did_game_become_available() for g in game_statuses])
             if did_game_change:
                 print("A game changed to available, sending email...")
-                emailer.send_game_status_emails(game_statuses)
+                notifier.send_game_status_emails(game_statuses)
             else:
                 print("No game changed state, not sending email...")
                 errors_getting_game_availability = any([g.is_game_sold_out is None for g in game_statuses])
                 if errors_getting_game_availability:
                     print("Errors getting game availability, sending email...")
-                    emailer.send_error_email()
-
+                    notifier.send_error_email()
         except Exception as e:
-            print('Exception while starting emailer: {}'.format(e))
+            print('Exception during execution: {}'.format(e))
 
         finally:
-            if emailer:
+            if type(notifier) == EmailNotifier:
                 print('Closing SMTP Connection')
-                emailer.close()
+                notifier.close()

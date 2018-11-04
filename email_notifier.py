@@ -4,8 +4,10 @@ import textwrap
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from notifier import Notifier
 
-class Emailer(object):
+
+class EmailNotifier(Notifier):
     def __init__(self, user_email_address, password):
         self.user_email_address = user_email_address
         self.server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
