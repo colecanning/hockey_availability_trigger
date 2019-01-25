@@ -10,6 +10,7 @@ from email_notifier import EmailNotifier
 from game_status import GameStatus
 from notifier_factory import NotifierFactory
 from sql_dao import SQLDao
+from utility import debug
 
 
 class AvailabilityChecker(object):
@@ -36,7 +37,7 @@ class AvailabilityChecker(object):
 
         game_statuses = []
         for day, url in urls.items():
-            print('Checking {} ...'.format(day))
+            print('Checking {}: {}...'.format(day, url))
             try:
                 request = Request(url, headers={'User-Agent' : "Magic Browser"})
                 connection = urlopen(request)
@@ -54,6 +55,7 @@ class AvailabilityChecker(object):
                     game_status.insert_game()
 
             except Exception as e:
+                debug("Exception getting game status: {}".format(e))
                 game_status = GameStatus(day, url, None, sql_dao)
                 game_statuses.append(game_status)
 
@@ -76,8 +78,7 @@ class AvailabilityChecker(object):
                 notifier.send_game_status_emails(game_statuses)
             else:
                 print("No game changed state, not sending email...")
-                errors_getting_game_availability = any([g.is_game_sold_out is None for g in game_statuses])
-                if errors_getting_game_availability:
+                if len([g for g in game_statuses if g.is_game_sold_out is None]) == len(game_statuses):
                     print("Errors getting game availability, sending email...")
                     notifier.send_error_email()
         except Exception as e:
