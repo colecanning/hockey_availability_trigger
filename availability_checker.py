@@ -85,6 +85,6 @@ class AvailabilityChecker(object):
             print('Exception during execution: {}'.format(e))
 
         finally:
-            if type(notifier) == EmailNotifier:
+            if isinstance(notifier, EmailNotifier):
                 print('Closing SMTP Connection')
                 notifier.close()
