@@ -4,15 +4,15 @@ import textwrap
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from credentials import gmail_password, gmail_user
 from notifier import Notifier
 
 
 class EmailNotifier(Notifier):
-    def __init__(self, user_email_address, password):
-        self.user_email_address = user_email_address
+    def __init__(self):
         self.server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         self.server.ehlo()
-        self.server.login(user_email_address, password)
+        self.server.login(gmail_user, gmail_password)
 
     def close(self):
         if self.server:
@@ -21,12 +21,12 @@ class EmailNotifier(Notifier):
     def send_email(self, body):
         message = MIMEMultipart('alternative')
         message['Subject'] = 'Hockey Game Available!'
-        message['From'] = self.user_email_address
-        message['To'] = self.user_email_address
+        message['From'] = gmail_user
+        message['To'] = gmail_user
 
         part2 = MIMEText(body, 'html')
         message.attach(part2)
-        self.server.sendmail(self.user_email_address, self.user_email_address, message.as_string())
+        self.server.sendmail(gmail_user, gmail_user, message.as_string())
 
     @staticmethod
     def get_game_availability_copy(is_game_sold_out):
