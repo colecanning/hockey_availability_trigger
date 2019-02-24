@@ -1,2 +1,1 @@
 beautifulsoup4==4.6.3
-python-pushsafer==0.4
