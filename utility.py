@@ -1,4 +1,4 @@
-from credentials import gmail_password, gmail_user, debug as debug_flag
+from credentials import debug as debug_flag
 
 
 def debug(message):
