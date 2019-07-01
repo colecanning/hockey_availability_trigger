@@ -1,10 +1,12 @@
 import datetime
+import os
 import textwrap
 from collections import OrderedDict
 from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup
 
+from credentials import sqlite_db_file
 from email_notifier import EmailNotifier
 from game_status import GameStatus
 from notifier_factory import NotifierFactory
@@ -15,9 +17,15 @@ from utility import debug
 class AvailabilityChecker(object):
     SOLD_OUT = 'SOLD OUT'
 
+    def initialize(self, clear=False):
+        # pip install --index-url https://pypi.python.org/simple/ -r requirements.txt
+        if clear:
+            print("Deleting SQL DB File...")
+            os.remove(sqlite_db_file)
+
     def build_urls(self):
         base_url = 'https://secure.stinkysocks.net/NCH/NCH-'
-        hours = [21, 22]
+        hours = [20, 21]
         weeks_ahead = 2
 
         urls = OrderedDict()
@@ -68,7 +76,7 @@ class AvailabilityChecker(object):
         sql_dao = SQLDao()
         try :
             sql_dao.build_hockey_games_table()
-            notifier = NotifierFactory.get_notifier()
+            notifier = NotifierFactory.get_notifier(0)
             game_statuses = self.get_game_statuses(sql_dao)
 
             did_game_change = any([g.did_game_become_available() for g in game_statuses])
