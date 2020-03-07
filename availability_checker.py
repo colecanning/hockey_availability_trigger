@@ -25,7 +25,7 @@ class AvailabilityChecker(object):
 
     def build_urls(self):
         base_url = 'https://secure.stinkysocks.net/NCH/NCH-'
-        hours = [20, 21]
+        hours = [21, 22]
         weeks_ahead = 2
 
         urls = OrderedDict()
@@ -50,7 +50,7 @@ class AvailabilityChecker(object):
                 connection = urlopen(request)
 
                 soup = BeautifulSoup(connection, 'html.parser')
-                game_status_button = soup.find('a', attrs={'class': 'more-info'})
+                game_status_button = soup.find('div', attrs={'class': 'product-notes'})
 
                 is_game_sold_out = bool(game_status_button and self.SOLD_OUT in game_status_button.text)
                 game_status = GameStatus(day, url, is_game_sold_out, sql_dao)
@@ -78,6 +78,7 @@ class AvailabilityChecker(object):
             sql_dao.build_hockey_games_table()
             notifier = NotifierFactory.get_notifier(0)
             game_statuses = self.get_game_statuses(sql_dao)
+            print(game_statuses)
 
             did_game_change = any([g.did_game_become_available() for g in game_statuses])
             if did_game_change:
