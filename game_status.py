@@ -15,7 +15,7 @@ class GameStatus(object):
 
     def set_prior_game_availability(self):
         game_info = self.sql_dao.get_hockey_game(str(self.datetime))
-        self.was_game_sold_out = game_info[0][0] if game_info else None
+        self.was_game_sold_out = not game_info[0][0] if game_info else None
 
     def insert_game(self):
         self.sql_dao.insert_hockey_game((str(self.datetime), not self.is_game_sold_out))
