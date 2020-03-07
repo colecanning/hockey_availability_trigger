@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from credentials import sqlite_db_file
 from email_notifier import EmailNotifier
 from game_status import GameStatus
-from notifier_factory import NotifierFactory
+from notifier_factory import NotifierFactory, EMAIL_NOTIFIER, PUSH_SAFER_NOTIFIER, TERMINAL_NOTIFIER, PUSH_OVER_NOTIFIER
 from sql_dao import SQLDao
 from utility import debug
 
@@ -76,7 +76,7 @@ class AvailabilityChecker(object):
         sql_dao = SQLDao()
         try :
             sql_dao.build_hockey_games_table()
-            notifier = NotifierFactory.get_notifier(0)
+            notifier = NotifierFactory.get_notifier(PUSH_OVER_NOTIFIER)
             game_statuses = self.get_game_statuses(sql_dao)
             print(game_statuses)
 

@@ -62,5 +62,6 @@ class EmailNotifier(Notifier):
         """)
         self.send_email(body)
 
-    def send_error_email(self):
-        self.send_email('There was an issue getting game availability!')
+    def send_error_email(self, message):
+        message = message if message is not None else 'There was an issue getting game availability!'
+        self.send_email(message)

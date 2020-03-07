@@ -1,3 +1,6 @@
+import datetime
+
+
 class GameStatus(object):
     def __init__(self, datetime, url, is_game_sold_out, sql_dao):
         self.datetime = datetime
@@ -20,7 +23,33 @@ class GameStatus(object):
     def insert_game(self):
         self.sql_dao.insert_hockey_game((str(self.datetime), not self.is_game_sold_out))
 
+    def get_readable_date(self):
+        return self.datetime.strftime("%m/%d/%Y, %I:%M %p")
+
+    def is_next_game(self):
+        return (self.datetime - datetime.datetime.now()).days <= 7
+
     def __repr__(self):
         return f"{{datetime: {self.datetime}, is_game_sold_out: {self.is_game_sold_out}, was_game_sold_out: {self.was_game_sold_out}}}"
 
-
+    @staticmethod
+    def get_game_statuses_by_week(game_statuses):
+        """
+        Example:
+        {
+            '10':
+                {
+                    'datetime': datetime,
+                    'game_statuses': [GameStatus, ...]
+                },
+            ...
+        }
+        """
+        games_by_week = {}
+        for game in game_statuses:
+            week = game.datetime.strftime("%W")
+            if week not in games_by_week:
+                games_by_week[week] = {"datetime":game.datetime, "game_statuses": [game]}
+            else:
+                games_by_week[week]["game_statuses"].append(game)
+        return games_by_week
