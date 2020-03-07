@@ -78,12 +78,11 @@ class AvailabilityChecker(object):
             sql_dao.build_hockey_games_table()
             notifier = NotifierFactory.get_notifier(PUSH_OVER_NOTIFIER)
             game_statuses = self.get_game_statuses(sql_dao)
-            print(game_statuses)
 
             did_game_change = any([g.did_game_become_available() for g in game_statuses])
             if did_game_change:
                 print("A game changed to available, sending notification...")
-                notifier.send_game_status_emails(game_statuses)
+                notifier.send_game_status_update(game_statuses)
             else:
                 print("No game changed state, not sending notification...")
                 if len([g for g in game_statuses if g.is_game_sold_out is None]) == len(game_statuses):
