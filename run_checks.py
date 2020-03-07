@@ -1,9 +1,8 @@
 import argparse
 
 from availability_checker import AvailabilityChecker
+from configuration import SLEEP_TIME
 from time import sleep
-
-SLEEP_TIME = 2 * 60
 
 parser = argparse.ArgumentParser("availability_checker")
 parser.add_argument("--clear", help="boolean whether or not to clear the db file before checking status", type=bool)

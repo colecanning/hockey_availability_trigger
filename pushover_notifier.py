@@ -1,6 +1,7 @@
 import datetime
 import http.client, urllib
 
+from configuration import STINKYSOCKS_SCHEDULE_URL
 from credentials import pushover_token, pushover_user
 from email_notifier import EmailNotifier
 from game_status import GameStatus
@@ -76,6 +77,6 @@ class PushoverNotifier(Notifier):
 
         # Add the schedule at the bottom of the message
         message += "\n"
-        message += '<a href="https://www.stinkysocks.net/schedules/2020WINSOMLI3/">Schedule</a>'
+        message += f'<a href="{STINKYSOCKS_SCHEDULE_URL}">Schedule</a>'
 
         return message

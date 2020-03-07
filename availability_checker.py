@@ -7,6 +7,7 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
 from credentials import sqlite_db_file
+from configuration import STINKYSOCKS_GAME_HOURS, WEEKS_LOOKAHEAD
 from email_notifier import EmailNotifier
 from game_status import GameStatus
 from notifier_factory import NotifierFactory, EMAIL_NOTIFIER, PUSH_SAFER_NOTIFIER, TERMINAL_NOTIFIER, PUSH_OVER_NOTIFIER
@@ -25,14 +26,12 @@ class AvailabilityChecker(object):
 
     def build_urls(self):
         base_url = 'https://secure.stinkysocks.net/NCH/NCH-'
-        hours = [21, 22]
-        weeks_ahead = 2
 
         urls = OrderedDict()
         today = datetime.date.today()
-        for week_ahead in range(weeks_ahead):
+        for week_ahead in range(WEEKS_LOOKAHEAD):
             tuesday = today + datetime.timedelta(((1-today.weekday()) % 7) + week_ahead * 7)
-            for hour in hours:
+            for hour in STINKYSOCKS_GAME_HOURS:
                 tuesday_dt = datetime.datetime.combine(tuesday, datetime.datetime.min.time())
                 tuesday_dt = tuesday_dt.replace(hour=hour, minute=0)
                 urls[tuesday_dt] = base_url + tuesday_dt.strftime('%Y%m%d%H%S') + 'SOM.html'
@@ -66,7 +65,7 @@ class AvailabilityChecker(object):
                 game_status = GameStatus(day, url, None, sql_dao)
                 game_statuses.append(game_status)
 
-        print("All Hockey Games: ")
+        print("All Hockey Games from SQL: ")
         print(sql_dao.get_hockey_games())
 
         return game_statuses
@@ -78,6 +77,9 @@ class AvailabilityChecker(object):
             sql_dao.build_hockey_games_table()
             notifier = NotifierFactory.get_notifier(PUSH_OVER_NOTIFIER)
             game_statuses = self.get_game_statuses(sql_dao)
+
+            print("All Hockey Game Statuses: ")
+            print(game_statuses)
 
             did_game_change = any([g.did_game_become_available() for g in game_statuses])
             if did_game_change:
