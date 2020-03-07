@@ -9,9 +9,6 @@ class GameStatus(object):
         self.was_game_sold_out = None
         self.sql_dao = sql_dao
 
-    # def __str__(self):
-    #     return str(self.datetime)
-
     def did_game_become_available(self):
         """ Is the game a new game, or did it change statuses to available? """
         return (self.was_game_sold_out is None) or (self.was_game_sold_out and self.is_game_sold_out is False)
@@ -35,6 +32,7 @@ class GameStatus(object):
     @staticmethod
     def get_game_statuses_by_week(game_statuses):
         """
+        Get the game statuses in a dictionary where each key is the week of the year.
         Example:
         {
             '10':

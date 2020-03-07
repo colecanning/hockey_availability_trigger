@@ -37,7 +37,7 @@ class EmailNotifier(Notifier):
         else:
             return 'available'
 
-    def send_game_status_emails(self, game_statuses):
+    def send_game_status_update(self, game_statuses):
         body = textwrap.dedent("""
         <table>
             <thead>

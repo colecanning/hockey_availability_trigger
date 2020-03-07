@@ -16,7 +16,7 @@ class PushSaferNotifier(Notifier):
         'k' : push_safer_private_key
     }
 
-    def send_game_status_emails(self, game_statuses):
+    def send_game_status_update(self, game_statuses):
         for game_status in [g for g in game_statuses if g.did_game_become_available()]:
             post_fields = self.DEFAULT_POST_FIELDS
             post_fields['u'] = game_status.url
