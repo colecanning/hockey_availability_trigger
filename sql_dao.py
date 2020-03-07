@@ -50,7 +50,7 @@ class SQLDao(object):
     def get_hockey_games(self):
         cursor = self.connection.cursor()
         cursor.execute("""
-            SELECT game_date, is_available
+            SELECT game_date, CASE WHEN is_available THEN 'Available' ELSE 'Not Available' END
             FROM hockey_game_tested_new
         """)
 
