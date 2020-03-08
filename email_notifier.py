@@ -49,7 +49,6 @@ class EmailNotifier(Notifier):
             <tbody>
         """)
         for game_status in game_statuses:
-            print(game_status)
             body += textwrap.dedent("""
                 <tr>
                     <td> {} </td> <td> {} </td> <td> <a href="{}"> link </a> </td>
