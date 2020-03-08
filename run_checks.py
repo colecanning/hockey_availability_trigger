@@ -1,7 +1,7 @@
 import argparse
 
 from availability_checker import AvailabilityChecker
-from configuration import SLEEP_TIME
+from config.configuration import SLEEP_TIME
 from time import sleep
 
 parser = argparse.ArgumentParser("availability_checker")

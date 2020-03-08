@@ -6,12 +6,12 @@ from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup
 
-from credentials import sqlite_db_file
-from configuration import STINKYSOCKS_GAME_HOURS, WEEKS_LOOKAHEAD
-from email_notifier import EmailNotifier
-from game_status import GameStatus
-from notifier_factory import EMAIL_NOTIFIER, NotifierFactory, PUSHOVER_NOTIFIER, PUSH_SAFER_NOTIFIER, TERMINAL_NOTIFIER
-from sql_dao import SQLDao
+from config.configuration import STINKYSOCKS_GAME_HOURS, WEEKS_LOOKAHEAD
+from config.credentials import sqlite_db_file
+from daos.sql_dao import SQLDao
+from models.game_status import GameStatus
+from notifiers.email_notifier import EmailNotifier
+from notifiers.notifier_factory import EMAIL_NOTIFIER, NotifierFactory, PUSHOVER_NOTIFIER, PUSH_SAFER_NOTIFIER, TERMINAL_NOTIFIER
 from utility import debug
 
 

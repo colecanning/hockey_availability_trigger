@@ -1,11 +1,11 @@
 import datetime
 import http.client, urllib
 
-from configuration import STINKYSOCKS_SCHEDULE_URL
-from credentials import pushover_token, pushover_user
-from email_notifier import EmailNotifier
-from game_status import GameStatus
-from notifier import Notifier
+from config.configuration import STINKYSOCKS_SCHEDULE_URL
+from config.credentials import pushover_token, pushover_user
+from models.game_status import GameStatus
+from notifiers.email_notifier import EmailNotifier
+from notifiers.notifier import Notifier
 
 
 class PushoverNotifier(Notifier):

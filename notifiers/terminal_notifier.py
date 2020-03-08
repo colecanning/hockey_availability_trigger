@@ -1,4 +1,4 @@
-from notifier import Notifier
+from notifiers.notifier import Notifier
 
 
 class TerminalNotifier(Notifier):

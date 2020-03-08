@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 
-from credentials import sqlite_db_file
+from config.credentials import sqlite_db_file
 
 
 class SQLDao(object):

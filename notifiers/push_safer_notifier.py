@@ -2,8 +2,8 @@ import calendar
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from credentials import push_safer_private_key
-from notifier import Notifier
+from config.credentials import push_safer_private_key
+from notifiers.notifier import Notifier
 
 
 class PushSaferNotifier(Notifier):
