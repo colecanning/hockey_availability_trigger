@@ -1,4 +1,4 @@
-from credentials import debug as debug_flag
+from config.credentials import debug as debug_flag
 
 
 def debug(message):

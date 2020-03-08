@@ -4,8 +4,8 @@ import textwrap
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from credentials import gmail_password, gmail_user
-from notifier import Notifier
+from config.credentials import gmail_password, gmail_user
+from notifiers.notifier import Notifier
 
 
 class EmailNotifier(Notifier):

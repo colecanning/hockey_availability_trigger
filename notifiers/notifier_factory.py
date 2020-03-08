@@ -1,7 +1,7 @@
-from email_notifier import EmailNotifier
-from pushover_notifier import PushoverNotifier
-from push_safer_notifier import PushSaferNotifier
-from terminal_notifier import TerminalNotifier
+from notifiers.email_notifier import EmailNotifier
+from notifiers.pushover_notifier import PushoverNotifier
+from notifiers.push_safer_notifier import PushSaferNotifier
+from notifiers.terminal_notifier import TerminalNotifier
 
 
 EMAIL_NOTIFIER = 0
