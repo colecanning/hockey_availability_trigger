@@ -37,4 +37,4 @@ def get_secret(project_id, secret_id):
 #     return response
 
 
-print(get_secret("780728492658", "TestSecret"))
+print(get_secret("zippy-purpose-270518", "TestSecret"))
