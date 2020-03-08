@@ -7,13 +7,13 @@ from terminal_notifier import TerminalNotifier
 EMAIL_NOTIFIER = 0
 PUSH_SAFER_NOTIFIER = 1
 TERMINAL_NOTIFIER = 2
-PUSH_OVER_NOTIFIER = 3
+PUSHOVER_NOTIFIER = 3
 
 NOTIFIERS = {
     EMAIL_NOTIFIER: EmailNotifier,
     PUSH_SAFER_NOTIFIER: PushSaferNotifier,
     TERMINAL_NOTIFIER: TerminalNotifier,
-    PUSH_OVER_NOTIFIER: PushoverNotifier
+    PUSHOVER_NOTIFIER: PushoverNotifier
 }
 
 class NotifierFactory(object):
