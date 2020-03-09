@@ -69,6 +69,27 @@ class AvailabilityChecker(object):
 
         return game_statuses
 
+    def send_game_status_notification(self):
+        notifier = None
+        sql_dao = SQLDao()
+        try :
+            sql_dao.build_hockey_games_table()
+            notifier = NotifierFactory.get_notifier(PUSHOVER_NOTIFIER)
+            game_statuses = self.get_game_statuses(sql_dao)
+
+            print("All Hockey Game Statuses: ")
+            print(game_statuses)
+
+            print("Sending report notification...")
+            notifier.send_all_game_status_update(game_statuses)
+        except Exception as e:
+            print('Exception during execution: {}'.format(e))
+
+        finally:
+            if isinstance(notifier, EmailNotifier):
+                print('Closing SMTP Connection')
+                notifier.close()
+
     def check_game_availability(self):
         notifier = None
         sql_dao = SQLDao()

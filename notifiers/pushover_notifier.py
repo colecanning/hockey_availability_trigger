@@ -14,7 +14,9 @@ class PushoverNotifier(Notifier):
     def send_game_status_update(self, game_statuses):
         """ Send a push notification with the game availability information """
         message = self.get_game_status_message(game_statuses)
+        self.send_notification(message, "Hockey Notifier - Availability Changed!")
 
+    def send_notification(self, message, title):
         conn = http.client.HTTPSConnection("api.pushover.net:443")
 
         conn.request("POST", "/1/messages.json",
@@ -22,6 +24,7 @@ class PushoverNotifier(Notifier):
             "token": pushover_token,
             "user": pushover_user,
             "html": 1,
+            "title": title,
             "message": message
           }), { "Content-type": "application/x-www-form-urlencoded" })
 
@@ -37,7 +40,11 @@ class PushoverNotifier(Notifier):
         email_notifier = EmailNotifier()
         email_notifier.send_error_email(error_message)
 
-    def get_game_status_message(self, game_statuses):
+    def send_all_game_status_update(self, game_statuses):
+        message = self.get_game_status_message(game_statuses, skip_now_available=True)
+        self.send_notification(message, "Hockey Notifier - Status Report")
+
+    def get_game_status_message(self, game_statuses, skip_now_available=False):
         """ Get a message with all of the game's statuses, which ones have recently become available, and a link to the
             current scheudle """
         message = ""
@@ -62,7 +69,7 @@ class PushoverNotifier(Notifier):
             # Go through each game in the week and print out its availability, date, and a badge if it's recently become available
             for game in games_statuses_weekly[week]['game_statuses']:
                 message += "    "
-                if game.did_game_become_available():
+                if not skip_now_available and game.did_game_become_available():
                     message += '<b><font color="#00FF00">[NOW AVAILABLE!]</font></b> '
 
                 if game.is_game_sold_out:
