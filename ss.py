@@ -1,3 +1,5 @@
+from google.cloud import secretmanager_v1beta1 as secretmanager
+
 secrets = secretmanager.SecretManagerServiceClient()
 projectid = "587789046371"
 
