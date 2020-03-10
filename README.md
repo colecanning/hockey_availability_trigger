@@ -4,9 +4,9 @@ Check the availability of future Stinky Socks hockey games, and email the user w
 
 # Setup
 Create a virtualenv and use pip to install the requirements in `requirements.txt`
-`virtualenv -p python3.6 venv`
+`virtualenv -p python3.7 venv`
 `source venv/bin/activate`
-`pip install --index-url https://pypi.python.org/simple/ -r requirements.txt`
+`pip3 install --index-url https://pypi.python.org/simple/ -r requirements.txt`
 
 Create a file where sqlite will save information. The script will modify this file.
 `touch /path/to/sqlitefile.db`

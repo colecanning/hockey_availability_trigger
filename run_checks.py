@@ -1,4 +1,5 @@
 import argparse
+import imgkit
 import sched
 from datetime import datetime, timedelta
 from pytz import timezone

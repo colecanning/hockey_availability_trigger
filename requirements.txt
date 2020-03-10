@@ -1,2 +1,4 @@
 beautifulsoup4==4.6.3
+imgkit==1.0.2
 python-pushsafer==0.4
+pytz==2019.3
