@@ -15,7 +15,7 @@ TIMEZONE = timezone('EST')
 def when_to_generate_report(now):
     tomorrow = now + timedelta(1)
     return datetime(tzinfo=TIMEZONE, year=tomorrow.year, month=tomorrow.month,
-                        day=tomorrow.day, hour=9, minute=0, second=0)
+                        day=tomorrow.day, hour=REPORT_HOUR, minute=0, second=0)
 
 def seconds_until_next_report(now):
     """Get the number of seconds until the specified hour of the day, tomorrow. """
