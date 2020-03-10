@@ -1,6 +1,7 @@
 import argparse
 import sched
 from datetime import datetime, timedelta
+from pytz import timezone
 from random import randint
 from time import sleep, time
 
@@ -8,9 +9,11 @@ from availability_checker import AvailabilityChecker
 from config.configuration import SLEEP_TIME, REPORT_HOUR
 
 
+TIMEZONE = timezone('EST')
+
 def when_to_generate_report(now):
     tomorrow = now + timedelta(1)
-    return datetime(year=tomorrow.year, month=tomorrow.month,
+    return datetime(tzinfo=TIMEZONE, year=tomorrow.year, month=tomorrow.month,
                         day=tomorrow.day, hour=9, minute=0, second=0)
 
 def seconds_until_next_report(now):
@@ -37,10 +40,11 @@ def check_availability(sc):
 
 def get_status_report(sc):
     availability_checker.send_game_status_notification()
-    now = datetime.now()
+    now = datetime.now(TIMEZONE)
     time_of_next_report = when_to_generate_report(now)
-    print("Sleeping until next daily report at {} ... \n\n".format(time_of_next_report))
-    scheduler.enter(seconds_until_next_report(now), 1, get_status_report, (sc,))
+    seconds_till_next_report = seconds_until_next_report(now)
+    print(f"Sleeping until next daily report at {time_of_next_report} ({int(seconds_till_next_report/60/60)} hours from now)... \n\n")
+    scheduler.enter(seconds_till_next_report, 1, get_status_report, (sc,))
 
 scheduler.enter(0, 1, check_availability, (scheduler,))
 scheduler.enter(0, 1, get_status_report, (scheduler,))
