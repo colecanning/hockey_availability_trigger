@@ -88,10 +88,14 @@ class PushoverNotifier(Notifier):
                 if not skip_now_available and game.did_game_become_available():
                     message += '<b><font color="#00FF00">[NOW AVAILABLE!]</font></b> '
 
-                if game.is_game_sold_out:
-                    message += '<font color="#FF0000">Unavailable</font> - '
+                if game.was_game_found():
+                    if game.is_game_sold_out:
+                        message += '<font color="#FF0000">Unavailable</font> - '
+                    else:
+                        message += '<font color="#00FF00">Available</font> - '
                 else:
-                    message += '<font color="#00FF00">Available</font> - '
+                    message += 'Game Not Found - '
+
 
                 message += f'<a href="{game.url}"> {game.get_readable_date()}</a>'
                 message += f"{line_separator}"
