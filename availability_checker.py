@@ -101,9 +101,10 @@ class AvailabilityChecker(object):
             print("All Hockey Game Statuses: ")
             print(game_statuses)
 
-            did_game_change = any([g.did_game_become_available() for g in game_statuses])
-            if did_game_change:
+            changed_games = [g for g in game_statuses if g.did_game_become_available()]
+            if any(changed_games):
                 print("A game changed to available, sending notification...")
+                print(f"Changed games: {changed_games}")
                 notifier.send_game_status_update(game_statuses)
             else:
                 print("No game changed state, not sending notification...")

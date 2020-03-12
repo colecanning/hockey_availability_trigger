@@ -10,8 +10,13 @@ class GameStatus(object):
         self.sql_dao = sql_dao
 
     def did_game_become_available(self):
-        """ Is the game a new game, or did it change statuses to available? """
-        return (self.was_game_sold_out is None) or (self.was_game_sold_out and self.is_game_sold_out is False)
+        """
+        Is the game a new game, or did it change statuses to available?
+        TODO: checking "self.is_game_sold_out is not None" is a hack - both of these values are None if we fail to find it
+            when querying the site. Instead, we just shouldn't insert into the DB, or should handle the exceptional state of
+            the game better so that this is more explicit.
+        """
+        return (self.was_game_sold_out is None and self.is_game_sold_out is not None) or (self.was_game_sold_out and self.is_game_sold_out is False)
 
     def set_prior_game_availability(self):
         game_info = self.sql_dao.get_hockey_game(str(self.datetime))
